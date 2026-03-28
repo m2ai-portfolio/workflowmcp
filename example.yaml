@@ -1,0 +1,11 @@
+name: example-workflow
+steps:
+  - agent: researcher
+    tool: web_search
+    depends_on: []
+  - agent: summarizer
+    tool: text_summary
+    depends_on: [0]
+  - agent: reviewer
+    tool: quality_check
+    depends_on: [1]

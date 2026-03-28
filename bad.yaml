@@ -1,0 +1,5 @@
+name: bad-workflow
+steps:
+  - agent: researcher
+    tool: web_search
+    depends_on: [5]
