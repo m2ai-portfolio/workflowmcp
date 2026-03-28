@@ -20,6 +20,7 @@ dev = [
 
 [project.scripts]
 workflow-mcp = "workflow_mcp.cli:cli"
+copilot_sdk = "workflow_mcp.sdk.cli:cli"
 
 [tool.setuptools.packages.find]
 include = ["workflow_mcp*"]
