@@ -6,6 +6,7 @@ from pathlib import Path
 import click
 
 from .core import parse_workflow, validate_workflow, visualize_workflow
+from .monitoring import WorkflowObserver
 
 
 @click.group()
@@ -83,6 +84,55 @@ def visualize(file: str, output: str):
         sys.exit(1)
     except Exception as e:
         click.echo(f"Error generating visualization: {e}", err=True)
+        sys.exit(1)
+
+
+@cli.command()
+@click.option('--workflow', required=True, help='Workflow name or YAML file path')
+@click.option('--format', 'output_format', type=click.Choice(['json', 'prometheus']), default='json', help='Output format')
+@click.option('--test', 'test_mode', is_flag=True, help='Run in test mode (simulate failure)')
+def monitor(workflow: str, output_format: str, test_mode: bool):
+    """Monitor workflow execution with real-time metrics."""
+    try:
+        # Try to resolve workflow path - first check if it's a file path
+        workflow_path = Path(workflow)
+        if not workflow_path.exists():
+            # Try with .yaml extension
+            workflow_path = Path(f"{workflow}.yaml")
+            if not workflow_path.exists():
+                click.echo(f"Error: Workflow file not found: {workflow}", err=True)
+                sys.exit(1)
+
+        # Create observer
+        observer = WorkflowObserver(workflow_name=workflow_path.stem)
+
+        # Simulate workflow run
+        events = observer.simulate_run(str(workflow_path), inject_failure=test_mode)
+
+        # Output in requested format
+        if output_format == 'json':
+            # Stream JSON lines to stdout (one per event)
+            for event in events:
+                click.echo(json.dumps(event))
+        elif output_format == 'prometheus':
+            # Output Prometheus metrics
+            metrics = observer.get_metrics_prometheus()
+            click.echo(metrics)
+
+        # If in test mode, verify alert was emitted
+        if test_mode:
+            alerts = [e for e in events if e.get('type') == 'alert']
+            if alerts:
+                click.echo("\n[TEST MODE] Alert verification: PASS", err=True)
+                click.echo(f"[TEST MODE] Emitted {len(alerts)} alert(s)", err=True)
+            else:
+                click.echo("\n[TEST MODE] Alert verification: FAIL - No alerts emitted", err=True)
+                sys.exit(1)
+
+        sys.exit(0)
+
+    except Exception as e:
+        click.echo(f"Error monitoring workflow: {e}", err=True)
         sys.exit(1)
 
 
