@@ -11,6 +11,7 @@ from workflow_mcp.core import (
     generate_mermaid,
     WorkflowParseError,
 )
+from workflow_mcp.monitoring import WorkflowObserver
 
 
 @click.group()
@@ -81,6 +82,56 @@ def visualize(file, output):
 
         click.echo(f"Mermaid diagram saved to {output}")
         sys.exit(0)
+
+    except WorkflowParseError as e:
+        click.echo(f"ERROR: {e}", err=True)
+        sys.exit(1)
+    except Exception as e:
+        click.echo(f"ERROR: Unexpected error: {e}", err=True)
+        sys.exit(1)
+
+
+@cli.command()
+@click.option('--workflow', required=True, help='Path to workflow YAML file')
+@click.option('--format', type=click.Choice(['json', 'prometheus']), default='json', help='Output format (json or prometheus)')
+@click.option('--test', is_flag=True, help='Test mode: simulate a failure')
+def monitor(workflow, format, test):
+    """Monitor workflow execution in real-time."""
+    try:
+        # Parse the workflow
+        workflow_model = parse_yaml(workflow)
+
+        # Validate the workflow
+        is_valid, errors = validate_workflow(workflow_model)
+        if not is_valid:
+            for error in errors:
+                click.echo(f"ERROR: {error}", err=True)
+            sys.exit(1)
+
+        # Create observer and execute workflow
+        observer = WorkflowObserver(workflow_model, test_mode=test)
+
+        try:
+            metrics = observer.execute_and_monitor()
+
+            # Output based on format
+            if format == 'prometheus':
+                click.echo(observer.format_prometheus_metrics())
+            # For json format, events are already streamed during execution
+            # Just need to verify successful completion
+
+            sys.exit(0)
+
+        except Exception as e:
+            # In test mode, failures are expected
+            if test:
+                # Still output metrics in the requested format
+                if format == 'prometheus':
+                    click.echo(observer.format_prometheus_metrics())
+                sys.exit(1)
+            else:
+                click.echo(f"ERROR: Workflow execution failed: {e}", err=True)
+                sys.exit(1)
 
     except WorkflowParseError as e:
         click.echo(f"ERROR: {e}", err=True)
