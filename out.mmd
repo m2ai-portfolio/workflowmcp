@@ -1,0 +1,10 @@
+graph TD
+    0["data_collector\n[fetch_api]"]
+    1["data_processor\n[transform]"]
+    2["analyzer\n[analyze_sentiment]"]
+    3["reporter\n[generate_report]"]
+    4["notifier"]
+    0 --> 1
+    1 --> 2
+    2 --> 3
+    3 --> 4

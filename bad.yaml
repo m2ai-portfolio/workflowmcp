@@ -1,0 +1,13 @@
+name: "Invalid Workflow - Circular Dependency"
+steps:
+  - agent: "step_a"
+    tool: "tool_a"
+    depends_on: [2]
+
+  - agent: "step_b"
+    tool: "tool_b"
+    depends_on: [0]
+
+  - agent: "step_c"
+    tool: "tool_c"
+    depends_on: [1]

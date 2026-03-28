@@ -1,0 +1,21 @@
+name: "Example Multi-Agent Workflow"
+steps:
+  - agent: "data_collector"
+    tool: "fetch_api"
+    depends_on: []
+
+  - agent: "data_processor"
+    tool: "transform"
+    depends_on: [0]
+
+  - agent: "analyzer"
+    tool: "analyze_sentiment"
+    depends_on: [1]
+
+  - agent: "reporter"
+    tool: "generate_report"
+    depends_on: [2]
+
+  - agent: "notifier"
+    tool: null
+    depends_on: [3]

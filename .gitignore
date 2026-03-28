@@ -11,3 +11,4 @@ build/
 htmlcov/
 *.png
 screenshots/
+!screenshots/M2A-582-implementation-results.png
