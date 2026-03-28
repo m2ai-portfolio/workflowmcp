@@ -1,0 +1,58 @@
+=== FEATURE 2: REAL-TIME AGENT EXECUTION MONITORING ===
+=== CLI MANUAL TESTS ===
+
+Test 1: JSON Lines Output
+Command: workflow-mcp monitor --workflow example.yaml
+
+{"type": "step_start", "step_index": 0, "agent": "researcher", "tool": "web_search", "timestamp": 1774679424.7919595}
+{"type": "step_end", "step_index": 0, "agent": "researcher", "status": "success", "duration": 0.08537173271179199, "tokens": 413, "timestamp": 1774679424.87733}
+{"type": "step_start", "step_index": 1, "agent": "summarizer", "tool": "text_summary", "timestamp": 1774679424.8773658}
+{"type": "step_end", "step_index": 1, "agent": "summarizer", "status": "success", "duration": 0.13054800033569336, "tokens": 129, "timestamp": 1774679425.0079088}
+{"type": "step_start", "step_index": 2, "agent": "reviewer", "tool": "quality_check", "timestamp": 1774679425.0079362}
+{"type": "step_end", "step_index": 2, "agent": "reviewer", "status": "success", "duration": 0.06343507766723633, "tokens": 295, "timestamp": 1774679425.0713685}
+
+RESULT: PASS - Streams JSON lines to stdout with step events
+
+========================================
+
+Test 2: Prometheus Format
+Command: workflow-mcp monitor --workflow example.yaml --format prometheus
+
+# HELP workflow_steps_total Total number of workflow steps by status
+# TYPE workflow_steps_total counter
+workflow_steps_total{workflow="example-workflow",status="success"} 3
+workflow_steps_total{workflow="example-workflow",status="failure"} 0
+
+# HELP workflow_step_duration_seconds Duration of each workflow step in seconds
+# TYPE workflow_step_duration_seconds gauge
+workflow_step_duration_seconds{workflow="example-workflow",step="0",agent="researcher"} 0.132
+workflow_step_duration_seconds{workflow="example-workflow",step="1",agent="summarizer"} 0.060
+workflow_step_duration_seconds{workflow="example-workflow",step="2",agent="reviewer"} 0.108
+
+# HELP workflow_tokens_total Total number of tokens used in workflow
+# TYPE workflow_tokens_total counter
+workflow_tokens_total{workflow="example-workflow"} 951
+
+RESULT: PASS - Exposes :workflow_steps_total metric in Prometheus format
+
+========================================
+
+Test 3: Failure Simulation
+Command: workflow-mcp monitor --workflow example.yaml --test
+
+{"type": "step_start", "step_index": 0, "agent": "researcher", "tool": "web_search", "timestamp": 1774679425.5232997}
+{"type": "step_end", "step_index": 0, "agent": "researcher", "status": "success", "duration": 0.10125994682312012, "tokens": 476, "timestamp": 1774679425.6245584}
+{"type": "step_start", "step_index": 1, "agent": "summarizer", "tool": "text_summary", "timestamp": 1774679425.6245952}
+{"type": "step_end", "step_index": 1, "agent": "summarizer", "status": "failure", "duration": 0.056052207946777344, "tokens": 126, "timestamp": 1774679425.6806424}
+{"type": "alert", "severity": "error", "step_index": 1, "message": "Step 1 (summarizer) failed during execution", "timestamp": 1774679425.6806862}
+{"type": "step_start", "step_index": 2, "agent": "reviewer", "tool": "quality_check", "timestamp": 1774679425.6807015}
+{"type": "step_end", "step_index": 2, "agent": "reviewer", "status": "success", "duration": 0.09902524948120117, "tokens": 316, "timestamp": 1774679425.7797217}
+
+[TEST MODE] Alert verification: PASS
+[TEST MODE] Emitted 1 alert(s)
+
+RESULT: PASS - Simulates failure and verifies alert emission
+
+========================================
+
+ALL CLI TESTS: PASSED

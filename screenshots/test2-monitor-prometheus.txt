@@ -1,0 +1,14 @@
+# HELP workflow_steps_total Total number of workflow steps by status
+# TYPE workflow_steps_total counter
+workflow_steps_total{workflow="example-workflow",status="success"} 3
+workflow_steps_total{workflow="example-workflow",status="failure"} 0
+
+# HELP workflow_step_duration_seconds Duration of each workflow step in seconds
+# TYPE workflow_step_duration_seconds gauge
+workflow_step_duration_seconds{workflow="example-workflow",step="0",agent="researcher"} 0.173
+workflow_step_duration_seconds{workflow="example-workflow",step="1",agent="summarizer"} 0.156
+workflow_step_duration_seconds{workflow="example-workflow",step="2",agent="reviewer"} 0.185
+
+# HELP workflow_tokens_total Total number of tokens used in workflow
+# TYPE workflow_tokens_total counter
+workflow_tokens_total{workflow="example-workflow"} 975

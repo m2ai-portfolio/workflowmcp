@@ -1,0 +1,26 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/apexaipc/projects/yce-harness/generations/metroplex-ideaforge-159/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/apexaipc/projects/yce-harness/generations/metroplex-ideaforge-159
+configfile: pyproject.toml
+plugins: cov-7.1.0
+collecting ... collected 16 items
+
+workflow_mcp/tests/test_agent.py::test_agent_model_from_dict PASSED      [  6%]
+workflow_mcp/tests/test_agent.py::test_agent_model_to_dict PASSED        [ 12%]
+workflow_mcp/tests/test_agent.py::test_agent_model_default_config PASSED [ 18%]
+workflow_mcp/tests/test_sdk.py::test_sdk_placeholder PASSED              [ 25%]
+workflow_mcp/tests/test_workflow.py::test_parse_valid_workflow PASSED    [ 31%]
+workflow_mcp/tests/test_workflow.py::test_parse_nonexistent_file PASSED  [ 37%]
+workflow_mcp/tests/test_workflow.py::test_validate_valid_workflow PASSED [ 43%]
+workflow_mcp/tests/test_workflow.py::test_validate_invalid_workflow PASSED [ 50%]
+workflow_mcp/tests/test_workflow.py::test_validate_cyclic_workflow PASSED [ 56%]
+workflow_mcp/tests/test_workflow.py::test_validate_missing_required_fields PASSED [ 62%]
+workflow_mcp/tests/test_workflow.py::test_validate_empty_steps PASSED    [ 68%]
+workflow_mcp/tests/test_workflow.py::test_validate_self_reference PASSED [ 75%]
+workflow_mcp/tests/test_workflow.py::test_visualize_workflow PASSED      [ 81%]
+workflow_mcp/tests/test_workflow.py::test_workflow_model_from_dict PASSED [ 87%]
+workflow_mcp/tests/test_workflow.py::test_step_model_to_dict PASSED      [ 93%]
+workflow_mcp/tests/test_workflow.py::test_complex_dag PASSED             [100%]
+
+============================== 16 passed in 0.04s ==============================

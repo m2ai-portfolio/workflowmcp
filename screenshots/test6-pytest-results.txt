@@ -1,0 +1,47 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0
+cachedir: .pytest_cache
+rootdir: /home/apexaipc/projects/yce-harness/generations/metroplex-ideaforge-159
+configfile: pyproject.toml
+plugins: cov-7.1.0
+collected 37 items
+
+workflow_mcp/tests/test_agent.py::test_agent_model_from_dict PASSED      [  2%]
+workflow_mcp/tests/test_agent.py::test_agent_model_to_dict PASSED        [  5%]
+workflow_mcp/tests/test_agent.py::test_agent_model_default_config PASSED [  8%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_observer_initialization PASSED [ 10%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_start_step_records_metrics PASSED [ 13%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_end_step_records_metrics PASSED [ 16%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_end_step_failure PASSED [ 18%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_end_step_without_start_raises_error PASSED [ 21%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_get_metrics_json PASSED [ 24%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_get_metrics_prometheus_format PASSED [ 27%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_prometheus_includes_help_and_type PASSED [ 29%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_emit_alert PASSED [ 32%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_simulate_run_with_real_workflow PASSED [ 35%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_simulate_run_with_failure_injection PASSED [ 37%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_simulate_run_updates_workflow_name PASSED [ 40%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_multiple_steps_token_accumulation PASSED [ 43%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_prometheus_escapes_special_characters_in_workflow_name PASSED [ 45%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_prometheus_escapes_backslashes_in_workflow_name PASSED [ 48%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_prometheus_escapes_newlines_in_workflow_name PASSED [ 51%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_prometheus_escapes_special_characters_in_agent_name PASSED [ 54%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_negative_token_usage_raises_error PASSED [ 56%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_duplicate_step_index_raises_error PASSED [ 59%]
+workflow_mcp/tests/test_monitoring.py::TestMonitorCLIIntegration::test_cli_monitor_command_exists PASSED [ 62%]
+workflow_mcp/tests/test_monitoring.py::TestMonitorCLIIntegration::test_monitor_command_has_required_options PASSED [ 64%]
+workflow_mcp/tests/test_sdk.py::test_sdk_placeholder PASSED              [ 67%]
+workflow_mcp/tests/test_workflow.py::test_parse_valid_workflow PASSED    [ 70%]
+workflow_mcp/tests/test_workflow.py::test_parse_nonexistent_file PASSED  [ 72%]
+workflow_mcp/tests/test_workflow.py::test_validate_valid_workflow PASSED [ 75%]
+workflow_mcp/tests/test_workflow.py::test_validate_invalid_workflow PASSED [ 78%]
+workflow_mcp/tests/test_workflow.py::test_validate_cyclic_workflow PASSED [ 81%]
+workflow_mcp/tests/test_workflow.py::test_validate_missing_required_fields PASSED [ 83%]
+workflow_mcp/tests/test_workflow.py::test_validate_empty_steps PASSED    [ 86%]
+workflow_mcp/tests/test_workflow.py::test_validate_self_reference PASSED [ 89%]
+workflow_mcp/tests/test_workflow.py::test_visualize_workflow PASSED      [ 91%]
+workflow_mcp/tests/test_workflow.py::test_workflow_model_from_dict PASSED [ 94%]
+workflow_mcp/tests/test_workflow.py::test_step_model_to_dict PASSED      [ 97%]
+workflow_mcp/tests/test_workflow.py::test_complex_dag PASSED             [100%]
+
+============================== 37 passed in 1.16s ==========================

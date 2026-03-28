@@ -1,0 +1,36 @@
+{
+  "name": "example-workflow",
+  "nodes": {
+    "0": {
+      "agent": "researcher",
+      "tool": "web_search",
+      "depends_on": [],
+      "dependents": [
+        1
+      ]
+    },
+    "1": {
+      "agent": "summarizer",
+      "tool": "text_summary",
+      "depends_on": [
+        0
+      ],
+      "dependents": [
+        2
+      ]
+    },
+    "2": {
+      "agent": "reviewer",
+      "tool": "quality_check",
+      "depends_on": [
+        1
+      ],
+      "dependents": []
+    }
+  },
+  "execution_order": [
+    0,
+    1,
+    2
+  ]
+}

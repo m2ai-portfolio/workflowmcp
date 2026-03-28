@@ -1,0 +1,6 @@
+{"type": "step_start", "step_index": 0, "agent": "researcher", "tool": "web_search", "timestamp": 1774679868.1630206}
+{"type": "step_end", "step_index": 0, "agent": "researcher", "status": "success", "duration": 0.1679668426513672, "tokens": 411, "timestamp": 1774679868.330986}
+{"type": "step_start", "step_index": 1, "agent": "summarizer", "tool": "text_summary", "timestamp": 1774679868.331015}
+{"type": "step_end", "step_index": 1, "agent": "summarizer", "status": "success", "duration": 0.19513344764709473, "tokens": 375, "timestamp": 1774679868.5261452}
+{"type": "step_start", "step_index": 2, "agent": "reviewer", "tool": "quality_check", "timestamp": 1774679868.526178}
+{"type": "step_end", "step_index": 2, "agent": "reviewer", "status": "success", "duration": 0.11039543151855469, "tokens": 204, "timestamp": 1774679868.6365697}

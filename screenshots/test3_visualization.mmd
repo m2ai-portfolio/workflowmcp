@@ -1,0 +1,7 @@
+graph TD
+    step0["researcher<br/>web_search"]
+    step1["summarizer<br/>text_summary"]
+    step2["reviewer<br/>quality_check"]
+    start([Start]) --> step0
+    step0 --> step1
+    step1 --> step2

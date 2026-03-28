@@ -1,0 +1,66 @@
+========================================
+M2A-571: FEATURE 2 - MONITORING COMPLETE
+========================================
+
+1. ALL TESTS PASSING (31/31)
+----------------------------
+============================= test session starts ==============================
+workflow_mcp/tests/test_agent.py::test_agent_model_from_dict PASSED      [  3%]
+workflow_mcp/tests/test_agent.py::test_agent_model_to_dict PASSED        [  6%]
+workflow_mcp/tests/test_agent.py::test_agent_model_default_config PASSED [  9%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_observer_initialization PASSED [ 12%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_start_step_records_metrics PASSED [ 16%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_end_step_records_metrics PASSED [ 19%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_end_step_failure PASSED [ 22%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_end_step_without_start_raises_error PASSED [ 25%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_get_metrics_json PASSED [ 29%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_get_metrics_prometheus_format PASSED [ 32%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_prometheus_includes_help_and_type PASSED [ 35%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_emit_alert PASSED [ 38%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_simulate_run_with_real_workflow PASSED [ 41%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_simulate_run_with_failure_injection PASSED [ 45%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_simulate_run_updates_workflow_name PASSED [ 48%]
+workflow_mcp/tests/test_monitoring.py::TestWorkflowObserver::test_multiple_steps_token_accumulation PASSED [ 51%]
+workflow_mcp/tests/test_monitoring.py::TestMonitorCLIIntegration::test_cli_monitor_command_exists PASSED [ 54%]
+workflow_mcp/tests/test_monitoring.py::TestMonitorCLIIntegration::test_monitor_command_has_required_options PASSED [ 58%]
+workflow_mcp/tests/test_sdk.py::test_sdk_placeholder PASSED              [ 61%]
+workflow_mcp/tests/test_workflow.py::test_parse_valid_workflow PASSED    [ 64%]
+workflow_mcp/tests/test_workflow.py::test_parse_nonexistent_file PASSED  [ 67%]
+workflow_mcp/tests/test_workflow.py::test_validate_valid_workflow PASSED [ 70%]
+workflow_mcp/tests/test_workflow.py::test_validate_invalid_workflow PASSED [ 74%]
+workflow_mcp/tests/test_workflow.py::test_validate_cyclic_workflow PASSED [ 77%]
+workflow_mcp/tests/test_workflow.py::test_validate_missing_required_fields PASSED [ 80%]
+workflow_mcp/tests/test_workflow.py::test_validate_empty_steps PASSED    [ 83%]
+workflow_mcp/tests/test_workflow.py::test_validate_self_reference PASSED [ 87%]
+workflow_mcp/tests/test_workflow.py::test_visualize_workflow PASSED      [ 90%]
+workflow_mcp/tests/test_workflow.py::test_workflow_model_from_dict PASSED [ 93%]
+workflow_mcp/tests/test_workflow.py::test_step_model_to_dict PASSED      [ 96%]
+workflow_mcp/tests/test_workflow.py::test_complex_dag PASSED             [100%]
+============================== 31 passed in 1.15s ==============================
+
+2. CLI TEST 1: JSON Output
+----------------------------
+{"type": "step_start", "step_index": 0, "agent": "researcher", "tool": "web_search", "timestamp": 1774679510.3363614}
+{"type": "step_end", "step_index": 0, "agent": "researcher", "status": "success", "duration": 0.1236732006072998, "tokens": 253, "timestamp": 1774679510.460034}
+{"type": "step_start", "step_index": 1, "agent": "summarizer", "tool": "text_summary", "timestamp": 1774679510.4600644}
+...
+[✓] JSON lines streaming works
+
+3. CLI TEST 2: Prometheus Format
+----------------------------
+# HELP workflow_steps_total Total number of workflow steps by status
+# TYPE workflow_steps_total counter
+workflow_steps_total{workflow="example-workflow",status="success"} 3
+workflow_steps_total{workflow="example-workflow",status="failure"} 0
+[✓] Prometheus metrics exposed
+
+4. CLI TEST 3: Failure Simulation
+----------------------------
+{"type": "alert", "severity": "error", "step_index": 0, "message": "Step 0 (researcher) failed during execution", "timestamp": 1774679511.4359157}
+[TEST MODE] Alert verification: PASS
+[TEST MODE] Emitted 1 alert(s)
+[✓] Alert emission verified
+
+========================================
+FEATURE COMPLETE - ALL REQUIREMENTS MET
+========================================

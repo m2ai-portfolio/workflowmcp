@@ -1,0 +1,117 @@
+================================================================================
+QA REGRESSION TEST REPORT - Feature 2 (Real-time Agent Execution Monitoring)
+================================================================================
+Project: metroplex-ideaforge-159
+Test Date: 2026-03-28
+Test Type: REGRESSION TEST (post-Feature 2 implementation)
+
+================================================================================
+OVERALL RESULT: PASS
+================================================================================
+
+================================================================================
+FEATURE 2 TESTS (NEW FEATURE - PRIMARY FOCUS)
+================================================================================
+
+Test 1: Monitor - JSON lines output
+Status: PASS
+Command: python -m workflow_mcp.cli monitor --workflow example.yaml
+Expected: Streams JSON lines to stdout with step events
+Actual: Successfully streamed 6 JSON events including:
+  - step_start events for steps 0, 1, 2
+  - step_end events for steps 0, 1, 2
+  - All events included required fields: type, step_index, agent, timestamp
+  - Token counts recorded: 411, 375, 204 tokens
+  - All steps completed with status "success"
+Evidence: /home/apexaipc/projects/yce-harness/generations/metroplex-ideaforge-159/screenshots/test1-monitor-json.txt
+
+Test 2: Monitor - Prometheus format
+Status: PASS
+Command: python -m workflow_mcp.cli monitor --workflow example.yaml --format prometheus
+Expected: Output contains Prometheus metrics including workflow_steps_total
+Actual: Successfully output Prometheus-formatted metrics:
+  - workflow_steps_total metric present (3 success, 0 failure)
+  - workflow_step_duration_seconds metric present for all 3 steps
+  - workflow_tokens_total metric present (975 total tokens)
+  - Proper Prometheus format with # HELP and # TYPE comments
+Evidence: /home/apexaipc/projects/yce-harness/generations/metroplex-ideaforge-159/screenshots/test2-monitor-prometheus.txt
+
+Test 3: Monitor - Failure simulation
+Status: PASS
+Command: python -m workflow_mcp.cli monitor --workflow example.yaml --test
+Expected: Simulates a failure, emits alert, shows failure events
+Actual: Successfully simulated failure and emitted alert:
+  - Step 0 failed with status "failure"
+  - Alert event emitted with type "alert", severity "error"
+  - Alert message: "Step 0 (researcher) failed during execution"
+  - Test mode verification passed: "[TEST MODE] Alert verification: PASS"
+  - Emitted 1 alert as expected
+Evidence: /home/apexaipc/projects/yce-harness/generations/metroplex-ideaforge-159/screenshots/test3-monitor-failure.txt
+
+================================================================================
+FEATURE 1 REGRESSION TESTS (EXISTING FEATURE - STABILITY CHECK)
+================================================================================
+
+Test 4: Parse command
+Status: PASS
+Command: python -m workflow_mcp.cli parse --file example.yaml
+Expected: JSON DAG output, exit code 0
+Actual: Successfully parsed workflow:
+  - Valid JSON output with name, nodes, execution_order
+  - DAG correctly shows 3 nodes with proper dependency chain
+  - execution_order: [0, 1, 2] (sequential)
+  - Exit code: 0
+Evidence: /home/apexaipc/projects/yce-harness/generations/metroplex-ideaforge-159/screenshots/test4-parse-command.txt
+
+Test 5: Validate command
+Status: PASS
+Command: python -m workflow_mcp.cli validate --file bad.yaml
+Expected: Error message, exit code 1
+Actual: Successfully detected invalid workflow:
+  - Error message: "Workflow validation failed"
+  - Specific error: "Step 0 has invalid dependency reference: 5 (valid range: 0-0)"
+  - Exit code: 1
+Evidence: /home/apexaipc/projects/yce-harness/generations/metroplex-ideaforge-159/screenshots/test5-validate-command.txt
+
+Test 6: Full unit test suite
+Status: PASS
+Command: python -m pytest workflow_mcp/tests/ -v --tb=short
+Expected: All 37 tests pass
+Actual: All 37 tests passed in 1.16 seconds:
+  - 3 agent tests passed
+  - 21 monitoring tests passed (Feature 2)
+  - 1 SDK test passed
+  - 12 workflow tests passed (Feature 1)
+  - No failures, no errors
+Evidence: /home/apexaipc/projects/yce-harness/generations/metroplex-ideaforge-159/screenshots/test6-pytest-results.txt
+
+================================================================================
+SUMMARY
+================================================================================
+
+New Feature (Feature 2): PASS (3/3 tests)
+  - JSON monitoring: PASS
+  - Prometheus monitoring: PASS
+  - Failure alerting: PASS
+
+Existing Features (Feature 1): PASS (3/3 tests)
+  - Parse command: PASS
+  - Validate command: PASS
+  - Unit test suite: PASS (37/37)
+
+Total Tests: 6/6 PASS
+Issues Found: NONE
+Regressions Detected: NONE
+
+================================================================================
+CONCLUSION
+================================================================================
+
+Feature 2 (Real-time Agent Execution Monitoring) is fully functional and meets
+all requirements. All existing Feature 1 functionality remains intact with no
+regressions detected. The project is ready for production use.
+
+All test evidence files stored in:
+/home/apexaipc/projects/yce-harness/generations/metroplex-ideaforge-159/screenshots/
+
+================================================================================

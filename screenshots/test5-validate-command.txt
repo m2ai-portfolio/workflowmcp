@@ -1,0 +1,3 @@
+Workflow validation failed:
+  - Step 0 has invalid dependency reference: 5 (valid range: 0-0)
+Exit code: 1
