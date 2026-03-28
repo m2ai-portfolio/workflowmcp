@@ -1,0 +1,49 @@
+{
+  "project_id": "9b551e06-71a4-4576-96ec-0fc21ac600bb",
+  "project_name": "WorkflowMCP: Declarative Agent Orchestration",
+  "project_slug": "2081d6da4f14",
+  "team_id": "488a02b5-c546-4242-95fb-bf6caf038fa1",
+  "team_key": "M2A",
+  "meta_issue_id": "M2A-573",
+  "total_issues": 3,
+  "initialized": true,
+  "created_at": "2026-03-28T06:12:10Z",
+  "issues": [
+    {
+      "id": "72a154f5-0178-4ef0-9005-0099e9535c9e",
+      "identifier": "M2A-570",
+      "title": "Feature 1: Declarative YAML Workflow Definition",
+      "status": "Backlog",
+      "priority": "High",
+      "test_steps": [
+        "workflow-mcp parse --file example.yaml -> Outputs JSON DAG representation.",
+        "workflow-mcp validate --file bad.yaml -> Returns exit code 1 with error message.",
+        "workflow-mcp visualize --file example.yaml -> Generates Mermaid diagram saved to out.png."
+      ]
+    },
+    {
+      "id": "c8845102-1a51-42d2-9ff0-e95916b75b56",
+      "identifier": "M2A-571",
+      "title": "Feature 2: Real-time Agent Execution Monitoring",
+      "status": "Backlog",
+      "priority": "High",
+      "test_steps": [
+        "workflow-mcp monitor --workflow example -> Streams JSON lines to stdout.",
+        "workflow-mcp monitor --workflow example --format prometheus -> Exposes :workflow_steps_total metric.",
+        "workflow-mcp monitor --workflow example --test -> Simulates a failure and verifies alert emission."
+      ]
+    },
+    {
+      "id": "a8c4eb9d-e648-4c64-b6af-965a95504cf0",
+      "identifier": "M2A-572",
+      "title": "Feature 3: Extensible SDK Integration (Copilot)",
+      "status": "Backlog",
+      "priority": "High",
+      "test_steps": [
+        "copilot_sdk load_skill --name summarizer -> Loads module and returns handle.",
+        "copilot_sdk run_skill --handle h --input {\"text\":\"long article\"} -> Returns summarized text.",
+        "copilot_sdk list_skills -> Prints available skill names."
+      ]
+    }
+  ]
+}
