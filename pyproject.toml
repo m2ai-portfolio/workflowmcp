@@ -22,6 +22,7 @@ dev = [
 
 [project.scripts]
 workflow-mcp = "workflow_mcp.cli:cli"
+copilot_sdk = "workflow_mcp.cli:sdk_cli"
 
 [tool.pytest.ini_options]
 testpaths = ["workflow_mcp/tests"]
