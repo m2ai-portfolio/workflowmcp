@@ -1,68 +1,41 @@
-# WorkflowMCP: Declarative Agent Orchestration
 
-WorkflowMCP is a Python 3.11+ CLI tool that enables declarative agent orchestration via YAML workflows. It provides a structured approach to defining, managing, and executing complex agent-based workflows without requiring imperative code for orchestration logic.
 
-## Tech Stack
+# WorkflowMCP: Declarative Agent Orchestration  
+  
 
-- **Python 3.11+**: Core runtime
-- **click**: CLI framework for command-line interface
-- **pytest**: Testing framework for unit and integration tests
-- **PyYAML**: YAML parsing for workflow definitions
+## Overview  
+WorkflowMCP is an MCP server that enables declarative definition, execution, and monitoring of multi‑agent workflows via YAML. It integrates with Claude Code and supports Copilot SDK extensions, allowing solo AI developers to quickly prototype and test agent‑based systems without writing procedural glue.
 
-## Features
+## Problem Statement  
+Solo developers struggle to orchestrate multi‑agent agents because they must write procedural code for each step, making workflows hard to visualize, modify, and share. Current methods rely on ad‑hoc scripts or complex orchestration tools that are overkill for solo use.
 
-- Declarative workflow definitions using YAML
-- Built-in agent orchestration capabilities
-- CLI tool for workflow execution and management
-- Comprehensive test suite
+## Features  
+- Declarative YAML workflow definition  
+- Real‑time agent execution monitoring  
+- Extensible SDK integration (Copilot)  
 
-## Project Structure
+## Tech Stack  
+- Python 3.11+  
+- click (CLI framework)  
+- pytest (testing)  
 
-```
-workflow-mcp/
-├── README.md              # Project documentation
-├── init.sh               # Development environment setup
-├── .gitignore           # Git ignore rules
-├── pyproject.toml       # Project metadata and dependencies
-├── requirements.txt     # Python dependencies
-├── src/
-│   └── workflow_mcp/     # Main package
-│       ├── __init__.py
-│       ├── cli.py        # Click CLI commands
-│       ├── workflow.py   # Workflow execution logic
-│       └── parser.py     # YAML workflow parser
-└── tests/
-    ├── conftest.py      # Pytest configuration
-    └── test_*.py        # Test modules
-```
+## Quick Start / Installation  
+1. Clone the repository: `git clone https://github.com/your-org/workflow-mcp.git`  
+2. Create a virtual environment: `python -m venv venv`  
+3. Activate the environment: `source venv/bin/activate`  
+4. Install dependencies: `pip install -r requirements.txt`  
+5. Run the MCP server: `workflow-mcp start --port 8000`  
 
-## Getting Started
+## Usage  
+- Define a workflow in YAML (see `example.yaml`)  
+- Start the server and monitor runs via the CLI: `workflow-mcp monitor --workflow example`  
+- Load custom agent skills with Copilot SDK: `copilot_sdk load_skill --name summarizer`  
 
-### Development Setup
+## Architecture  
+The WorkflowMCP server consists of a YAML‑driven MCP core, a Claude Code observer for real‑time execution streaming, and a Copilot SDK plug‑in system for extensible agent skills. The server exposes a REST/WebSocket API for external interaction and stores workflow state in memory for fast lookup.  
 
-Run the initialization script to set up your development environment:
+## License  
+MIT  
 
-```bash
-bash init.sh
-```
-
-This will:
-- Create a Python virtual environment
-- Install project dependencies (click, pytest, pyyaml)
-- Prepare the environment for development
-
-### Running Workflows
-
-```bash
-workflow-mcp run path/to/workflow.yaml
-```
-
-### Running Tests
-
-```bash
-pytest
-```
-
-## License
-
-See LICENSE file for details.
+---  
+*Generated from the official app specification.*
