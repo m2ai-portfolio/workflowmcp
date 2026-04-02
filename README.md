@@ -3,7 +3,7 @@
   <img src="assets/infographic.png" alt="Workflowmcp" width="800">
 </p>
 
-<h3 align="center">ONE-LINE DESCRIPTION OF WHAT THIS DOES</h3>
+<h3 align="center">Declarative YAML pipelines for composing and orchestrating MCP-based AI agents</h3>
 <p align="center">
   <a href="#quick-start">Quick Start</a> &bull;
   <a href="#features">Features</a> &bull;
