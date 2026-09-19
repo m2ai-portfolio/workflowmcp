@@ -42,9 +42,9 @@ Solo developers struggle to orchestrate multi-agent agents because they must wri
 
 ## Quick Start
 1. Clone the repository:  
-   `git clone https://github.com/your-org/workflow-mcp.git`
+   `git clone https://github.com/m2ai-portfolio/workflowmcp.git`
 2. Change directory:  
-   `cd workflow-mcp`
+   `cd workflowmcp`
 3. Install in development mode:  
    `pip install -e .`
 4. Run a basic parse command:  
