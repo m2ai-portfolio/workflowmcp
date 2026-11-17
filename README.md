@@ -1,148 +1,93 @@
+# WorkflowMCP
 
+![WorkflowMCP, inspect a workflow before connecting real agents](docs/portfolio-hero.png)
 
-<p align="center">
-  <img src="assets/infographic.png" alt="WorkflowMCP: Declarative Agent Orchestration" width="800">
-</p>
+A research step feeds a summarizer, and the summary needs a review. Before connecting models or paying for a run, you need to know whether those steps form a valid plan. WorkflowMCP turns a small YAML file into an inspectable dependency graph, checks it for mistakes, and lets you explore execution events with a simulator.
 
-<h3 align="center">An MCP server that provides a declarative way to define, run, and monitor multi-agent workflows using YAML. Integrates with Claude Code for agent skills and supports embedding agentic execution layers like Copilot SDK for extensibility.</h3>
+**Status:** Python CLI prototype for workflow parsing, validation, visualization, simulated monitoring, and local example skills. The checked-in code does not provide an MCP transport or a live multi-agent execution engine. The project name describes its intended direction.
 
-<p align="center">
-  <a href="#quick-start">Quick Start</a> &bull;
-  <a href="#features">Features</a> &bull;
-  <a href="#examples">Examples</a> &bull;
-  <a href="#contributing">Contributing</a>
-</p>
+## What you can do
 
-## What is this?
-WorkflowMCP is an MCP server that lets you declare multi‑agent workflows in YAML, execute them via Claude Code agent skills, and monitor runs in real time. It targets solo AI developers who want to prototype agent‑based systems without writing procedural glue.  
-Example:
-```
-$ workflow-mcp parse --file example.yaml
-{
-  "name": "example",
-  "steps": [
-    {"id":0,"agent":"researcher","tool":null,"depends_on":[]},
-    {"id":1,"agent":"summarizer","tool":null,"depends_on":[0]},
-    {"id":2,"agent":"translator","tool":null,"depends_on":[1]}
-  ]
-}
-```
+- Express agents, tools, and zero-based step dependencies in YAML.
+- Validate required fields, dependency references, self-dependencies, and cycles.
+- Export a JSON graph with nodes, dependents, and an execution order.
+- Write a Mermaid diagram, with optional PNG rendering if `mmdc` is installed.
+- Produce simulated event logs and Prometheus-formatted text, including a failure scenario.
+- Load and call local Python skill examples through the bundled registry.
 
-## Problem
-Solo developers struggle to orchestrate multi-agent agents because they must write procedural code for each step, making workflows hard to visualize, modify, and share. Current methods involve ad-hoc scripts or complex orchestration tools that are overkill for solo use.
+## Set up
 
-## Features
-| Feature | Description |
-|---------|-------------|
-| Declarative YAML Workflow Definition | Define agents, tools, and step dependencies in YAML; the engine builds a directed acyclic graph (DAG) for execution. |
-| Real‑time Execution Monitoring | Subscribe to Claude Code execution streams, record timestamps/token usage, and export metrics in Prometheus format or JSON lines. |
-| Extensible SDK Integration | Load custom agent skills through the Copilot SDK entrypoint; supports dynamic loading from local files or git repositories. |
-| Workflow Validation & Visualization | Validate YAML against the workflow DSL and generate Mermaid diagrams for quick inspection. |
-| CLI‑driven Orchestration | Simple commands to parse, validate, run, and monitor workflows without writing any procedural code. |
+Requires Python 3.11 or newer. The core dependencies are Click and PyYAML. No model account or API key is needed for these local examples.
 
-## Quick Start
-1. Clone the repository:  
-   `git clone https://github.com/m2ai-portfolio/workflowmcp.git`
-2. Change directory:  
-   `cd workflowmcp`
-3. Install in development mode:  
-   `pip install -e .`
-4. Run a basic parse command:  
-   `workflow-mcp parse --file example.yaml`
-5. (Optional) Start a Prometheus metrics endpoint:  
-   `workflow-mcp monitor --workflow example --format prometheus`
-
-## Examples
-**Example 1: Parsing a workflow**  
-Command:  
-```
-workflow-mcp parse --file example.yaml
-```
-Output:  
-```
-{
-  "name": "example",
-  "steps": [
-    {"id":0,"agent":"researcher","tool":null,"depends_on":[]},
-    {"id":1,"agent":"summarizer","tool":null,"depends_on":[0]},
-    {"id":2,"agent":"translator","tool":null,"depends_on":[1]}
-  ]
-}
+```bash
+git clone https://github.com/m2ai-portfolio/workflowmcp.git
+cd workflowmcp
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e '.[dev]'
 ```
 
-**Example 2: Monitoring with Prometheus format**  
-Command:  
-```
-workflow-mcp monitor --workflow example --format prometheus
-```
-Output:  
-```
-# HELP workflow_steps_total Total number of workflow steps executed
-# TYPE workflow_steps_total counter
-workflow_steps_total{workflow="example",status="success"} 3
+On Windows, activate the virtual environment with `.venv\Scripts\Activate.ps1` in PowerShell.
+
+## Walk through the example
+
+1. Open [example.yaml](example.yaml). It describes a researcher, summarizer, and reviewer, with each later step depending on the previous one.
+2. Validate the plan and inspect the generated graph:
+
+   ```bash
+   workflow-mcp validate --file example.yaml
+   workflow-mcp parse --file example.yaml
+   ```
+
+   Validation should print `Workflow is valid`. Parsing returns `name`, `nodes`, and `execution_order`; the bundled example is named `example-workflow`.
+
+3. Export a diagram for review:
+
+   ```bash
+   workflow-mcp visualize --file example.yaml --output workflow.mmd
+   ```
+
+4. Explore the simulator's normal and failure paths:
+
+   ```bash
+   workflow-mcp monitor --workflow example.yaml --format json
+   workflow-mcp monitor --workflow example.yaml --format prometheus
+   workflow-mcp monitor --workflow example.yaml --test
+   ```
+
+   These commands print simulated events or metrics to standard output. They do not start a metrics server or observe a real agent run.
+
+5. Try a bundled local skill:
+
+   ```bash
+   copilot_sdk list_skills
+   copilot_sdk run_skill --handle summarizer --input '{"text":"A clear plan makes a workflow easier to review."}'
+   ```
+
+   `copilot_sdk` is this project's own command name. The implementation loads Python modules with a `run(input_data)` function; it is not evidence of integration with an external Copilot SDK.
+
+## Validate changes
+
+```bash
+python -m pytest
+workflow-mcp validate --file bad.yaml
 ```
 
-**Example 3: Running a Copilot skill**  
-Command:  
-```
-copilot_sdk run_skill --handle summarizer --input '{"text":"The quick brown fox jumps over the lazy dog."}'
-```
-Output:  
-```
-{"summary":"Fox jumps over dog."}
-```
+The invalid fixture is expected to exit nonzero. Tests cover parsing, agents, monitoring, and the skill registry. Test commands are provided for reproduction, not a claim that the project has passed on your machine.
 
-## File Structure
-```
-WorkflowMCP: Declarative Agent Orchestration/
-  workflow_mcp/                  # Core source package
-    cli.py                       # CLI entry point (workflow-mcp)
-    core.py                      # Workflow engine and DAG builder
-    models/                      # Pydantic models for workflow and agent
-      __init__.py
-      workflow.py
-      agent.py
-    monitoring/                  # Real‑time observer and metrics exporter
-      __init__.py
-      observer.py
-    sdk/                         # Copilot SDK integration
-      __init__.py
-      loader.py
-      skills/                    # Example agent skills
-        __init__.py
-        summarizer.py
-        translator.py
-        planner.py
-    tests/                       # Unit test suite
-      __init__.py
-      test_workflow.py
-      test_agent.py
-      test_monitoring.py
-      test_sdk.py
-  assets/                        # Diagram assets
-    infographic.png
-  screenshots/                   # Demo screenshots (selected)
-  example.yaml                   # Sample workflow definition
-  bad.yaml                       # Invalid workflow for validation tests
-  pyproject.toml                 # Project metadata and dependencies
-  README.md
-  LICENSE
-```
+## Source map
 
-## Tech Stack
-| Technology | Purpose |
-|------------|---------|
-| Python 3.11+ | Core language |
-| click | Building the command‑line interface |
-| pytest | Running unit tests |
+| Path | Purpose |
+|---|---|
+| [workflow_mcp/cli.py](workflow_mcp/cli.py) | CLI commands and simulator entry point |
+| [workflow_mcp/core.py](workflow_mcp/core.py) | Validation, dependency graph, and Mermaid export |
+| [workflow_mcp/models/](workflow_mcp/models/) | Workflow and agent data structures |
+| [workflow_mcp/monitoring/](workflow_mcp/monitoring/) | Simulated events and metrics |
+| [workflow_mcp/sdk/](workflow_mcp/sdk/) | Local skill registry and examples |
+| [workflow_mcp/tests/](workflow_mcp/tests/) | Unit tests |
 
-## Contributing
-Fork the repository, create a feature branch.  
-Make your changes, add tests, and ensure the test suite passes.  
-Submit a pull request with a clear description of your work.
+## Boundaries and next steps
 
-## License
-MIT
+There is no `run` command, hosted service, live Claude Code stream integration, or remote Git skill loader in this snapshot. Use it to inspect a workflow contract and study the components before building an executor around it. Local skill modules run as ordinary Python code, so only load code you trust.
 
-## Author
-Matthew Snow -- [M2AI](https://m2ai.co) | [@m2ai-portfolio](https://github.com/m2ai-portfolio)
+Built by Matthew Snow / [M2AI](https://memyselfplusai.com). [MIT license](LICENSE).
